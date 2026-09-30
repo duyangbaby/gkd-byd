@@ -58,14 +58,18 @@ object VehicleWidgets {
             VehicleStore.report("GKD 无障碍服务未连接，请重新启用后确认车辆状态")
             return false
         }
-        val info = manager.getAppWidgetInfo(config.widgetId)
-        if (info == null || info.provider.flattenToString() != config.provider ||
-            version(info.provider) != config.providerVersion
+        val secondary = command == VehicleCommand.CLOSE_WINDOWS
+        val widgetId = if (secondary) config.secondaryWidgetId else config.widgetId
+        val provider = if (secondary) config.secondaryProvider else config.provider
+        val providerVersion = if (secondary) config.secondaryProviderVersion else config.providerVersion
+        val info = manager.getAppWidgetInfo(widgetId)
+        if (info == null || info.provider.flattenToString() != provider ||
+            version(info.provider) != providerVersion
         ) {
             VehicleStore.report("小组件绑定或比亚迪版本已改变，请重新配置按钮")
             return false
         }
-        val view = createView(service, config.widgetId, info)
+        val view = createView(service, widgetId, info)
         val wm = service.getSystemService(WindowManager::class.java)
         val density = service.resources.displayMetrics.density
         val params = WindowManager.LayoutParams(
@@ -79,12 +83,19 @@ object VehicleWidgets {
         try {
             wm.addView(view, params)
             attached = true
-            val id = if (command == VehicleCommand.UNLOCK) config.unlockViewId else config.lockViewId
+            val id = when (command) {
+                VehicleCommand.UNLOCK -> config.unlockViewId
+                VehicleCommand.LOCK -> config.lockViewId
+                VehicleCommand.POWER_ON -> config.powerOnViewId
+                VehicleCommand.POWER_OFF -> config.powerOffViewId
+                VehicleCommand.CLOSE_WINDOWS -> config.windowViewId
+            }
+            if (id < 0) { VehicleStore.report("请先标记${command.label}按钮"); return false }
             repeat(25) {
                 delay(100)
                 val matches = view.clickableViews().filter { it.id == id && it.isShown && it.isEnabled }
                 if (matches.size == 1 && view.width > 0) {
-                    delay(300) // Allow the provider to replace placeholder RemoteViews.
+                    delay(config.clickDelayMs.toLong())
                     val current = view.clickableViews().filter { it.id == id && it.isShown && it.isEnabled }
                     if (current.size == 1) {
                         val clicked = current.single().performClick()
