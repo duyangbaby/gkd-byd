@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.AutoMode
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material.icons.outlined.RemoveCircleOutline
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.DarkMode
@@ -143,6 +144,7 @@ fun getIconDefaultDesc(imageVector: ImageVector): String? = when (imageVector) {
 }
 
 object GkIcons {
+    val DirectionsCar get() = Icons.Outlined.DirectionsCar
     val PlayArrow get() = Icons.Filled.PlayArrow
     val Link get() = Icons.Outlined.Link
     val CheckCircle get() = Icons.Outlined.CheckCircle

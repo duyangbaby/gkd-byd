@@ -19,6 +19,7 @@ import kotlinx.serialization.Serializable
 import li.gkd.app.text.UiStrings
 import li.gkd.app.ui.component.GkIcon
 import li.gkd.app.ui.component.GkIcons
+import li.gkd.app.feature.vehicle.useBydPage
 
 sealed class BottomNavItem(
     val key: Int,
@@ -49,8 +50,10 @@ sealed class BottomNavItem(
         icon = GkIcons.Settings,
     )
 
+    object Byd : BottomNavItem(key = 4, label = "BYD", icon = GkIcons.DirectionsCar)
+
     companion object {
-        val allSubObjects by lazy { arrayOf(Dashboard, SubsManage, AppList, Settings) }
+        val allSubObjects by lazy { arrayOf(Dashboard, SubsManage, AppList, Byd, Settings) }
     }
 }
 
@@ -88,6 +91,7 @@ fun HomePage() {
             BottomNavItem.SubsManage -> useSubsManagePage()
             BottomNavItem.AppList -> useAppListPage()
             BottomNavItem.Settings -> useSettingsPage()
+            BottomNavItem.Byd -> useBydPage()
         }
         Scaffold(
             modifier = page.modifier,

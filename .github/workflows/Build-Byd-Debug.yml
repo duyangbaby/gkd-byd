@@ -1,0 +1,35 @@
+name: Build BYD widget debug
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'gkd-app/src/**/vehicle/**'
+      - 'gkd-app/src/main/AndroidManifest.xml'
+      - 'gkd-app/src/main/kotlin/li/gkd/app/ui/app/MainNavigation.kt'
+      - '.github/workflows/Build-Byd-Debug.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - run: sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0'
+      - run: chmod +x gradlew && ./gradlew :gkd-app:testGkdDebugUnitTest :gkd-app:assembleGkdDebug --console=plain
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gkd-byd-debug
+          path: gkd-app/build/outputs/apk/gkd/debug/*.apk
+          if-no-files-found: error

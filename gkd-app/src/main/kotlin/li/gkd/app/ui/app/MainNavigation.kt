@@ -1,6 +1,10 @@
 package li.gkd.app.ui.app
 
 import li.gkd.app.MainViewModel
+import li.gkd.app.feature.vehicle.VehicleSettingsPage
+import li.gkd.app.feature.vehicle.VehicleSettingsRoute
+import li.gkd.app.feature.vehicle.VehicleSectionPage
+import li.gkd.app.feature.vehicle.VehicleSectionRoute
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -85,6 +89,8 @@ private val editorTransitions = NavDisplay.transitionSpec {
 }
 
 private val mainRouteEntryProvider = entryProvider {
+    entry<VehicleSettingsRoute> { VehicleSettingsPage() }
+    entry<VehicleSectionRoute> { VehicleSectionPage(it) }
     entry<HomeRoute> { HomePage() }
     entry<WorkModeRoute> { WorkModePage() }
     entry<AboutRoute> { AboutPage() }
