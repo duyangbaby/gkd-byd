@@ -2,6 +2,7 @@ package li.gkd.app.ui.home
 
 import li.gkd.app.ui.component.GkPageBottomSpace
 import li.gkd.app.MainViewModel
+import li.gkd.app.feature.vehicle.VehicleSettingsRoute
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -237,6 +238,10 @@ fun useSettingsPage(): ScaffoldExt {
             })
             GkSettingItem(title = UiStrings.backup_restore, onClick = {
                 showBackupDialog = true
+            })
+
+            GkSettingItem(title = "车辆靠近 / 远离", onClick = {
+                mainVm.navigatePage(VehicleSettingsRoute)
             })
 
             GkSettingItem(title = UiStrings.about_title, onClick = {
